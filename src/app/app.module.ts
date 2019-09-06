@@ -1,16 +1,28 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { APP_ROUTES } from "./app.routes";
 
-import { AppComponent } from './app.component';
+// Import library module
+import { NgxSpinnerModule } from "ngx-spinner";
+
+import { ReduxModule } from "./store/redux.module";
+
+import { PagesModule } from "./pages/pages.module";
+
+import { AppComponent } from "./app.component";
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
-    BrowserModule
+    BrowserAnimationsModule,
+    NgxSpinnerModule,
+    BrowserModule,
+    ReduxModule,
+    PagesModule,
+    APP_ROUTES
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

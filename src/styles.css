@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+
+.full-width {
+  width: 100% !important;
+}
+
+label {
+  margin-bottom: 0px !important;
+}
+
+.mat-button {
+  padding: 0px !important;
+}
+
+.mat-button:hover {
+  background: transparent !important;
+}
+
+.space-full-xs {
+  width: 100%;
+  margin: 0.4rem;
+}
+
+hr {
+  display: block;
+  margin: 10px 0 10px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  width: 300px;
+}
+
+md-divider {
+  border-width: 1px;
+  border-style: solid;
+}

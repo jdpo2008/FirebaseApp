@@ -1,0 +1,16 @@
+@import "../node_modules/@angular/material/theming";
+@include mat-core();
+
+$app-primary: mat-palette($mat-blue, 900);
+$app-accent: mat-palette($mat-pink, 500, 900, A100);
+$app-warn: mat-palette($mat-deep-orange);
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+// $dark-theme:   mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+@include angular-material-theme($app-theme);
+
+.alternate-theme {
+  $alternate-primary: mat-palette($mat-blue, 800);
+  $alternate-accent: mat-palette($mat-yellow, 400);
+  $alternate-theme: mat-light-theme($alternate-primary, $alternate-accent);
+  @include angular-material-theme($alternate-theme);
+}
