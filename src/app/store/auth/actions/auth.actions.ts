@@ -1,6 +1,6 @@
 import { Action } from "@ngrx/store";
-import { User } from "firebase";
-import { ICredentials } from "../../../interfaces/auth.interface";
+import { ICredentials, User } from "../../../interfaces/auth.interface";
+import { Usuario } from "../../../services/auth.service";
 
 export const GET_USER = "[Auth] Get user";
 export const AUTHENTICATED = "[Auth] Authenticated";
@@ -11,6 +11,7 @@ export const FACEBOOK_LOGIN = "[Auth] Facebook login attempt";
 export const TWITTER_LOGIN = "[Auth] Twitter login attempt";
 export const LOGOUT = "[Auth] Logout";
 export const AUTH_ERROR = "[Auth] Error";
+export const AUTH_SINGUP = "[Auth] Creating New User";
 
 export class GetUser implements Action {
   readonly type = GET_USER;
@@ -67,6 +68,11 @@ export class Logout implements Action {
   constructor(public payload?: any) {}
 }
 
+export class SingUp implements Action {
+  readonly type = AUTH_SINGUP;
+  constructor(public payload?: Usuario) {}
+}
+
 export type AuthActions =
   | GetUser
   | Authenticated
@@ -76,4 +82,5 @@ export type AuthActions =
   | FacebookLogin
   | TwitterkLogin
   | AuthError
+  | SingUp
   | Logout;

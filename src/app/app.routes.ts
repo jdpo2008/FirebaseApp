@@ -2,6 +2,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { AuthComponent } from "./pages/auth/auth.component";
 import { NotfoundComponent } from "./pages/notfound/notfound.component";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
+import { AuthGuard } from "./guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -15,7 +16,8 @@ const routes: Routes = [
   },
   {
     path: "index",
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: "404",

@@ -21,6 +21,7 @@ export interface IUser {
   displayName: string;
   loading?: boolean;
   error?: string;
+  crdentials?: ICredentials;
 }
 
 export class User implements IUser {

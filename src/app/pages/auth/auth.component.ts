@@ -1,63 +1,65 @@
-import { Component, OnInit } from "@angular/core";
-import { MatIconRegistry } from "@angular/material";
-import { DomSanitizer } from "@angular/platform-browser";
+import { Component, OnInit, OnDestroy, EventEmitter } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { IAppState } from "../../store/app.reducer";
-import { selectIsLoading } from "../../store/auth/selectors/auth.selectors";
 import * as authActions from "../../store/auth/actions/auth.actions";
 import { ICredentials } from "src/app/interfaces/auth.interface";
 import { Observable } from "rxjs/Observable";
-import { User } from "../../interfaces/auth.interface";
 import "rxjs/add/operator/map";
 import { NgxSpinnerService } from "ngx-spinner";
+import { Usuario, AuthService } from "../../services/auth.service";
+import { IAuthState } from "src/app/store/auth/state/auth.state";
+import { MatTabChangeEvent } from "@angular/material";
+import { AuthAnimations } from "../../animations/index";
+import { SingUp } from "../../store/auth/actions/auth.actions";
 import {
-  FacebookLogin,
-  TwitterkLogin
-} from "../../store/auth/actions/auth.actions";
-
-export const EMAIL_REGEX = new RegExp(
-  [
-    '^(([^<>()[\\]\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\.,;:\\s@"]+)*)',
-    '|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.',
-    "[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+",
-    "[a-zA-Z]{2,}))$"
-  ].join("")
-);
+  NameValidation,
+  LastNameValidation,
+  EmailValidation,
+  PasswordValidation,
+  RepeatPasswordValidator
+} from "../../helpers/validators";
 
 export const PHONE_NUMBER_REGEX = new RegExp(/^\+(?:[0-9] ?){6,14}[0-9]$/);
 
 @Component({
   selector: "app-auth",
   templateUrl: "./auth.component.html",
-  styleUrls: ["./auth.component.css"]
+  styleUrls: ["./auth.component.css"],
+  animations: [AuthAnimations]
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   public loginFormGroup: FormGroup;
   public registerFormGroup: FormGroup;
   public resetPasswordFormGroup: FormGroup;
+  public recordarme = false;
   public submited: boolean;
   public isLoading: boolean;
-
-  user$: Observable<User>;
-
+  public passwordResetWished = false;
+  public tabIndex: number;
+  user$: Observable<IAuthState>;
+  public selectedTabChange: EventEmitter<
+    MatTabChangeEvent
+  > = new EventEmitter();
   constructor(
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer,
     private fb: FormBuilder,
     private store: Store<IAppState>,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private authService: AuthService
   ) {
     this.submited = false;
-    this.registerProviderIcons();
     this.loginFormInit();
     this.registerFormInit();
+    this.resetPasswordFormInit();
   }
 
   ngOnInit() {
-    this.user$ = this.store.select("user");
+    // this.store.select("auth").subscribe(data => console.log(data.user));
     this.store.dispatch(new authActions.GetUser());
+    console.log(this.authService.authenticated);
   }
+
+  ngOnDestroy() {}
 
   public onLogin() {
     const credenials: ICredentials = {
@@ -65,6 +67,9 @@ export class AuthComponent implements OnInit {
       password: this.loginFormGroup.controls.password.value
     };
     this.submited = true;
+    // this.store
+    //   .select("auth")
+    //   .subscribe(auth => (this.isLoading = auth.loading));
     // this.store
     //   .pipe(select(selectIsLoading))
     //   .subscribe(val => (this.isLoading = val));
@@ -89,16 +94,35 @@ export class AuthComponent implements OnInit {
 
   public onRegister() {
     this.submited = true;
+    this.spinner.show();
     if (this.registerFormGroup.invalid) {
+      this.spinner.hide();
+      console.log(this.registerFormGroup);
       return;
     }
+    const user = new Usuario(
+      this.registerFormGroup.controls.nombre.value,
+      this.registerFormGroup.controls.apellido.value,
+      this.registerFormGroup.controls.email.value,
+      null,
+      null,
+      null,
+      null,
+      this.registerFormGroup.controls.password.value
+    );
+
+    this.store.dispatch(new authActions.SingUp(user));
+    // this.authService.singUp(
+    //   user,
+    //   this.registerFormGroup.controls.password.value
+    // );
   }
 
-  public onStrengthChanged(strength: number) {
+  private onStrengthChanged(strength: number) {
     console.log("password strength = ", strength);
   }
 
-  public getEmailErrorMessage() {
+  private getLoginEmailErrorMessage() {
     return this.loginFormGroup.controls.email.hasError("required")
       ? "El Email es Requerido"
       : this.loginFormGroup.controls.email.hasError("email")
@@ -106,7 +130,45 @@ export class AuthComponent implements OnInit {
       : "";
   }
 
-  public getPasswordErrorMessage() {
+  private getLoginPasswordErrorMessage() {
+    return this.registerFormGroup.controls.password.hasError("required")
+      ? "El Password es Requerido"
+      : this.registerFormGroup.controls.password.hasError("minlength")
+      ? "La contraseña debe tener mas de 8 caracteres"
+      : this.registerFormGroup.controls.password.hasError("maxlength")
+      ? "La contraseña debe tener menos de 15 caracteres"
+      : "";
+  }
+
+  private getRegisterNameErrorMessage() {
+    return this.registerFormGroup.controls.nombre.hasError("required")
+      ? "El Nombre es Requerido"
+      : this.registerFormGroup.controls.nombre.hasError("minlength")
+      ? "Debe tener mas de 2 caracteres"
+      : this.registerFormGroup.controls.nombre.hasError("maxlength")
+      ? "Debe tener menos de 25 caracteres"
+      : "";
+  }
+
+  private getRegisterLastNameErrorMessage() {
+    return this.registerFormGroup.controls.apellido.hasError("required")
+      ? "El Apellido es Requerido"
+      : this.registerFormGroup.controls.apellido.hasError("minlength")
+      ? "Debe tener mas de 2 caracteres"
+      : this.registerFormGroup.controls.apellido.hasError("maxlength")
+      ? "Debe tener menos de 25 caracteres"
+      : "";
+  }
+
+  private getRegisterEmailErrorMessage() {
+    return this.registerFormGroup.controls.email.hasError("required")
+      ? "El Email es Requerido"
+      : this.registerFormGroup.controls.email.hasError("email")
+      ? "No es un Email valido"
+      : "";
+  }
+
+  private getRegisterPasswordErrorMessage() {
     return this.loginFormGroup.controls.password.hasError("required")
       ? "El Password es Requerido"
       : this.loginFormGroup.controls.password.hasError("minlength")
@@ -116,52 +178,43 @@ export class AuthComponent implements OnInit {
       : "";
   }
 
-  public loginFormInit() {
+  private loginFormInit() {
     this.loginFormGroup = this.fb.group({
-      email: [null, [Validators.required, Validators.email]],
-      password: [
-        null,
-        [Validators.required, Validators.minLength(8), Validators.maxLength(15)]
-      ],
-      recordarme: [false]
+      email: [null, EmailValidation],
+      password: [null, PasswordValidation]
     });
   }
 
-  public registerFormInit() {
-    this.registerFormGroup = this.fb.group({
-      nombre: [null, [Validators.required]],
-      apellido: [null, [Validators.required]],
-      email: [null, [Validators.required, Validators.email]],
-      password: [
-        null,
-        [Validators.required, Validators.minLength(8), Validators.maxLength(15)]
-      ],
-      confirmpassword: [
-        null,
-        [Validators.required, Validators.minLength(8), Validators.maxLength(15)]
-      ]
+  private registerFormInit() {
+    this.registerFormGroup = this.fb.group(
+      {
+        nombre: [null, NameValidation],
+        apellido: [null, LastNameValidation],
+        email: [null, EmailValidation],
+        password: [null, PasswordValidation],
+        confirmpassword: [null]
+      },
+      { validator: RepeatPasswordValidator }
+    );
+  }
+
+  private resetPasswordFormInit() {
+    this.resetPasswordFormGroup = this.fb.group({
+      email: [null, EmailValidation]
     });
   }
 
-  public registerProviderIcons() {
-    this.iconRegistry
-      .addSvgIcon(
-        "google",
-        this.sanitizer.bypassSecurityTrustResourceUrl(
-          "../../../assets/images/svg/google-icon.svg"
-        )
-      )
-      .addSvgIcon(
-        "facebook",
-        this.sanitizer.bypassSecurityTrustResourceUrl(
-          "../../../assets/images/svg/facebook.svg"
-        )
-      )
-      .addSvgIcon(
-        "twitter",
-        this.sanitizer.bypassSecurityTrustResourceUrl(
-          "../../../assets/images/svg/twitter.svg"
-        )
-      );
+  private onTabChange(event: MatTabChangeEvent) {
+    if (event.index !== 2) {
+      this.passwordResetWished = false;
+    }
+    this.selectedTabChange.emit(event);
+    this.tabIndex = event.index;
+  }
+
+  private createForgotPasswordTab() {
+    this.submited = false;
+    this.passwordResetWished = true;
+    this.tabIndex = 2;
   }
 }

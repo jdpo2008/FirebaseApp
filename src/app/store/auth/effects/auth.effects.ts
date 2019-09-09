@@ -17,7 +17,6 @@ import "rxjs/add/operator/catch";
 import "rxjs/add/operator/delay";
 
 import { NgxSpinnerService } from "ngx-spinner";
-import { FACEBOOK_LOGIN, FacebookLogin } from "../actions/auth.actions";
 
 @Injectable()
 export class AuthEffects {
@@ -32,11 +31,10 @@ export class AuthEffects {
           /// User logged in
           this.spinner.hide();
           const user = new User(authData.uid, authData.displayName);
-          this.router.navigate(["/index"]);
           return new fromAuthActions.Authenticated(user);
         } else {
           /// User not logged in
-          this.router.navigate(["/login"]);
+          this.spinner.hide();
           return new fromAuthActions.NotAuthenticated();
         }
       })
@@ -51,7 +49,6 @@ export class AuthEffects {
       switchMap(payload => {
         return Observable.fromPromise(
           this.authService.singIn(payload.email, payload.password)
-          // this.singIn(payload.email, payload.password)
         );
       }),
       map(credential => {
@@ -133,6 +130,22 @@ export class AuthEffects {
     .catch(err =>
       Observable.of(new fromAuthActions.AuthError({ error: err.message }))
     );
+
+  @Effect()
+  singUP = this.actions$
+    .pipe(
+      ofType(fromAuthActions.AUTH_SINGUP),
+      map((action: fromAuthActions.SingUp) => action.payload),
+      switchMap(payload => {
+        return Observable.fromPromise(
+          this.authService.singUp(payload, payload.password)
+        );
+      }),
+      map(credential => {
+        return new fromAuthActions.GetUser();
+      })
+    )
+    .catch(err => err);
 
   constructor(
     private actions$: Actions,

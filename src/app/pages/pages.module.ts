@@ -11,6 +11,8 @@ import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { environment } from "../../environments/environment";
 
+import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
+
 import { AuthComponent } from "./auth/auth.component";
 import { NotfoundComponent } from "./notfound/notfound.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -26,13 +28,15 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    SweetAlert2Module.forRoot()
   ],
   exports: [
     AngularFireModule,
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    SweetAlert2Module,
     AuthComponent,
     NotfoundComponent,
     DashboardComponent

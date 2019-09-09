@@ -1,19 +1,36 @@
 <ng-container>
-  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-    <mat-tab-group>
+  <div
+    id="bg-shadow"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="gappx"
+    style="margin-top: 3em"
+  >
+    <mat-tab-group
+      [selectedIndex]="tabIndex"
+      (selectedTabChange)="onTabChange($event)"
+    >
       <mat-tab label="Iniciar Sesión">
         <mat-card>
           <mat-card-header>
-            <mat-card-title>Iniciar</mat-card-title>
+            <mat-card-title color="primary">Datos de Inicio</mat-card-title>
           </mat-card-header>
           <mat-card-content class="full-width">
             <form
+              [@animateStagger]="{ value: '50' }"
               [formGroup]="loginFormGroup"
               (ngSubmit)="onLogin()"
               novalidate
             >
-              <div fxLayout="column">
-                <mat-form-field appearance="outline">
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <mat-form-field
+                  appearance="outline"
+                  [@animate]="{
+                    value: '*',
+                    params: { duration: '300ms', y: '100px' }
+                  }"
+                  class="full-width"
+                >
                   <mat-label>Email</mat-label>
                   <input
                     matInput
@@ -24,37 +41,44 @@
                   />
                   <mat-error
                     *ngIf="submited && loginFormGroup.controls['email'].invalid"
-                    >{{ getEmailErrorMessage() }}</mat-error
+                    >{{ getLoginEmailErrorMessage() }}</mat-error
                   >
                 </mat-form-field>
 
-                <mat-form-field appearance="outline">
+                <mat-form-field
+                  appearance="outline"
+                  [@animate]="{
+                    value: '*',
+                    params: { duration: '300ms', y: '100px' }
+                  }"
+                  class="full-width"
+                >
                   <mat-label>Password</mat-label>
                   <input
                     matInput
+                    [type]="togglepassword.type"
                     formControlName="password"
                     placeholder="Password"
                     type="password"
                     required
                   />
+                  <mat-pass-toggle-visibility
+                    #togglepassword
+                    matSuffix
+                    color="primary"
+                  ></mat-pass-toggle-visibility>
+
                   <mat-error
                     *ngIf="
                       submited && loginFormGroup.controls['password'].invalid
                     "
-                    >{{ getPasswordErrorMessage() }}</mat-error
+                    >{{ getLoginPasswordErrorMessage() }}</mat-error
                   >
                 </mat-form-field>
-                <div fxLayout="row" fxLayoutAlign="space-between center">
-                  <mat-checkbox formControlName="recordarme" color="primary"
-                    >Recordarme</mat-checkbox
-                  >
-                  <button mat-button class="mat-button-hover" routerLink="link">
-                    Olvidaste la Contraseña?
-                  </button>
-                </div>
                 <button
+                  [@animate]="{ value: '*', params: { x: '50px' } }"
                   mat-raised-button
-                  style="margin-top: 20px"
+                  style="margin-top: 10px; width: 50%;"
                   color="primary"
                   type="submit"
                   [disabled]="isLoading"
@@ -68,10 +92,31 @@
                     >
                     </mat-spinner
                   ></mat-icon>
-                  <span *ngIf="!isLoading">SingIn</span>
+                  <span *ngIf="!isLoading">Login</span>
                 </button>
               </div>
             </form>
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              style="margin-top: 20px"
+            >
+              <mat-checkbox
+                #recordarme
+                name="recordarme"
+                color="primary"
+                [@animate]="{ value: '*', params: { x: '-50px' } }"
+                >Recordarme</mat-checkbox
+              >
+              <button
+                [@animate]="{ value: '*', params: { x: '-50px' } }"
+                mat-button
+                class="mat-button-hover"
+                (click)="createForgotPasswordTab()"
+              >
+                Olvidaste la Contraseña?
+              </button>
+            </div>
           </mat-card-content>
           <!-- <mat-card-footer *ngIf="isLoading">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -81,14 +126,26 @@
       <mat-tab label="Crear Cuenta">
         <mat-card>
           <mat-card-header>
-            <mat-card-title>Crear Usuario</mat-card-title>
+            <mat-card-title color="primary">Nuevo Usuario</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <form [formGroup]="registerFormGroup" (ngSubmit)="onRegister()">
-              <div fxLayout="column">
+            <form
+              [@animateStagger]="{ value: '50' }"
+              [formGroup]="registerFormGroup"
+              (ngSubmit)="onRegister()"
+              novalidate
+            >
+              <div fxLayout="column" fxLayoutAlign="center center">
                 <div class="row">
                   <div class="col">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field
+                      appearance="outline"
+                      class="full-width"
+                      [@animate]="{
+                        value: '*',
+                        params: { duration: '300ms', y: '100px' }
+                      }"
+                    >
                       <mat-label>Nombres</mat-label>
                       <input
                         matInput
@@ -96,10 +153,24 @@
                         placeholder="Nombres"
                         type="text"
                       />
+                      <mat-error
+                        *ngIf="
+                          submited &&
+                          registerFormGroup.controls['nombre'].invalid
+                        "
+                        >{{ getRegisterNameErrorMessage() }}</mat-error
+                      >
                     </mat-form-field>
                   </div>
                   <div class="col">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field
+                      appearance="outline"
+                      class="full-width"
+                      [@animate]="{
+                        value: '*',
+                        params: { duration: '300ms', y: '100px' }
+                      }"
+                    >
                       <mat-label>Apellidos</mat-label>
                       <input
                         matInput
@@ -107,10 +178,24 @@
                         placeholder="Apellidos"
                         type="text"
                       />
+                      <mat-error
+                        *ngIf="
+                          submited &&
+                          registerFormGroup.controls['apellido'].invalid
+                        "
+                        >{{ getRegisterLastNameErrorMessage() }}</mat-error
+                      >
                     </mat-form-field>
                   </div>
                 </div>
-                <mat-form-field appearance="outline">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  [@animate]="{
+                    value: '*',
+                    params: { duration: '300ms', y: '100px' }
+                  }"
+                >
                   <mat-label>Email</mat-label>
                   <input
                     matInput
@@ -118,44 +203,88 @@
                     placeholder="Email"
                     type="text"
                   />
+                  <mat-error
+                    *ngIf="
+                      submited && registerFormGroup.controls['email'].invalid
+                    "
+                    >{{ getRegisterEmailErrorMessage() }}</mat-error
+                  >
                 </mat-form-field>
-                <mat-form-field appearance="outline">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  [@animate]="{
+                    value: '*',
+                    params: { duration: '300ms', y: '100px' }
+                  }"
+                >
                   <mat-label>Password</mat-label>
                   <input
                     #password
                     matInput
                     formControlName="password"
                     placeholder="Password"
-                    type="password"
+                    [type]="toggle.type"
                   />
+                  <mat-pass-toggle-visibility
+                    #toggle
+                    matSuffix
+                    color="primary"
+                  ></mat-pass-toggle-visibility>
+                  <mat-error
+                    *ngIf="
+                      submited && registerFormGroup.controls['password'].invalid
+                    "
+                    >{{ getRegisterPasswordErrorMessage() }}</mat-error
+                  >
                   <mat-hint align="end" aria-live="polite">
-                    {{ password.value.length }} / {{ passwordComponent.max }}
-                  </mat-hint>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                  <mat-label>Confirmar Password</mat-label>
-                  <input
-                    matInput
-                    formControlName="confirmpassword"
-                    placeholder="Confirmar Password"
-                    type="password"
-                  />
-                  <mat-hint align="end" aria-live="polite">
-                    {{ password.value.length }} / {{ passwordComponent.max }}
+                    {{ password.value.length }} /
+                    {{ passwordComponent.max }}
                   </mat-hint>
                 </mat-form-field>
                 <mat-password-strength
                   #passwordComponent
                   (onStrengthChanged)="onStrengthChanged($event)"
                   [password]="password.value"
-                  class="green"
                   [min]="8"
                   [max]="15"
+                  class="full-width green"
+                  style="margin: 5px 0 !important"
                 >
                 </mat-password-strength>
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  [@animate]="{
+                    value: '*',
+                    params: { duration: '300ms', y: '100px' }
+                  }"
+                >
+                  <mat-label>Confirmar Password</mat-label>
+                  <input
+                    matInput
+                    formControlName="confirmpassword"
+                    placeholder="Confirmar Password"
+                    type="password"
+                    #confirmPass
+                  />
+                  <mat-hint align="end" aria-live="polite">
+                    {{ confirmPass.value.length }} /
+                    {{ passwordComponent.max }}
+                  </mat-hint>
+                  <mat-error
+                    *ngIf="
+                      registerFormGroup.controls.confirmpassword.hasError(
+                        'passwordsNotEqual'
+                      )
+                    "
+                    >Las Contraseñas deben ser Iguales verifique</mat-error
+                  >
+                </mat-form-field>
                 <button
+                  [@animate]="{ value: '*', params: { y: '50px' } }"
                   mat-raised-button
-                  style="margin-top: 20px"
+                  style="margin-top: 20px; width: 50%;"
                   color="primary"
                   type="submit"
                 >
@@ -178,16 +307,83 @@
           </mat-card-footer> -->
         </mat-card>
       </mat-tab>
+      <mat-tab label="Recuperar Contraseña" *ngIf="passwordResetWished">
+        <mat-card>
+          <mat-card-header
+            fxLayout="row"
+            fxLayoutAlign="space-between space-around"
+          >
+            <button mat-icon-button (click)="passwordResetWished = false">
+              <mat-icon color="primary">close</mat-icon>
+            </button>
+            <mat-card-title color="primary"
+              >Reiniciar Contraseña</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <form
+              [@animateStagger]="{ value: '50' }"
+              [formGroup]="resetPasswordFormGroup"
+              (ngSubmit)="onResetPassword()"
+              novalidate
+            >
+              <div fxLayout="column" fxLayoutAlign="center center" class="">
+                <mat-form-field
+                  appearance="outline"
+                  class="full-width"
+                  [@animate]="{
+                    value: '*',
+                    params: { duration: '300ms', y: '100px' }
+                  }"
+                >
+                  <mat-label>Email</mat-label>
+                  <input
+                    matInput
+                    formControlName="email"
+                    placeholder="Email"
+                    type="text"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      submited &&
+                      resetPasswordFormGroup.controls['email'].invalid
+                    "
+                    >{{ getEmailErrorMessage() }}</mat-error
+                  >
+                </mat-form-field>
+                <button
+                  mat-raised-button
+                  style="margin-top: 20px"
+                  color="primary"
+                  type="submit"
+                  style="width: 50% !important"
+                >
+                  <mat-icon *ngIf="isLoading">
+                    <mat-spinner
+                      diameter="40"
+                      mode="indeterminate"
+                      color="primary"
+                      diameter="20"
+                    >
+                    </mat-spinner
+                  ></mat-icon>
+                  <span *ngIf="!isLoading">Enviar Password</span>
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
     </mat-tab-group>
-    <mat-label color="primary" style="margin-top: 5px !important"
-      >Iniciar con</mat-label
-    >
-    <hr />
+    <mat-label color="primary" *ngIf="tabIndex != 2">Iniciar con </mat-label>
     <div
+      id="auth-providers"
       fxLayout="row"
       fxLayoutAlign="space-around center"
       fxLayoutGap="gappx"
       style="min-width: 200px"
+      *ngIf="tabIndex != 2"
     >
       <button mat-icon-button matTooltip="Google" (click)="onGoogleLogin()">
         <mat-icon svgIcon="google"></mat-icon>
