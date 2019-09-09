@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MaterialModule } from "../material.module";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { HttpClientModule } from "@angular/common/http";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -13,6 +12,8 @@ import { environment } from "../../environments/environment";
 
 import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 
+import { ComponentsModule } from "../components/components.module";
+
 import { AuthComponent } from "./auth/auth.component";
 import { NotfoundComponent } from "./notfound/notfound.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -22,14 +23,14 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
   imports: [
     CommonModule,
     FlexLayoutModule,
-    MaterialModule,
     HttpClientModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    ComponentsModule
   ],
   exports: [
     AngularFireModule,

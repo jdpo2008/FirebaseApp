@@ -21,7 +21,4 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.usuario = this.authService.usuario;
   }
   ngAfterViewInit(): void {}
-  public logOut() {
-    this.store.dispatch(new authActions.Logout());
-  }
 }

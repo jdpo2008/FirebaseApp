@@ -16,7 +16,9 @@ import {
   MatTabsModule,
   MatCheckboxModule,
   MatDividerModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatSidenavModule,
+  MatToolbarModule
 } from "@angular/material";
 import { MatPasswordStrengthModule } from "@angular-material-extensions/password-strength";
 import { CdkTableModule } from "@angular/cdk/table";
@@ -48,6 +50,8 @@ import { PortalModule } from "@angular/cdk/portal";
     MatCheckboxModule,
     MatDividerModule,
     MatTooltipModule,
+    MatSidenavModule,
+    MatToolbarModule,
     CdkTableModule,
     A11yModule,
     BidiModule,
@@ -75,6 +79,8 @@ import { PortalModule } from "@angular/cdk/portal";
     MatCheckboxModule,
     MatDividerModule,
     MatTooltipModule,
+    MatSidenavModule,
+    MatToolbarModule,
     CdkTableModule,
     A11yModule,
     BidiModule,
