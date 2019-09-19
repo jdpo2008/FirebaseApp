@@ -2,11 +2,36 @@ import { createSelector } from "@ngrx/store";
 import { IAuthState } from "../state/auth.state";
 import { IAppState } from "../../app.reducer";
 
-const LOADING = (state: IAppState) => state.auth;
+export const getAuthState = (state: IAppState) => state.auth;
 
 export const selectIsLoading = createSelector(
-  LOADING,
+  getAuthState,
   (state: IAuthState) => {
-    return state.loading;
+    return state.isLoading;
   }
+);
+
+export const getUser = createSelector(
+  getAuthState,
+  auth => auth.user
+);
+
+export const getIsAuthenticated = createSelector(
+  getAuthState,
+  auth => auth.isAuthenticated
+);
+
+export const getIsLoading = createSelector(
+  getAuthState,
+  auth => auth.isLoading
+);
+
+export const getIsAdmin = createSelector(
+  getAuthState,
+  auth => auth.isAdmin
+);
+
+export const getError = createSelector(
+  getAuthState,
+  auth => auth.error
 );

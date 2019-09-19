@@ -2,9 +2,16 @@
 @import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
 @import "../node_modules/@sweetalert2/themes/dark/dark.css";
 
+html,
 body {
+  height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
+}
+section {
+  height: 100vh;
+  width: 100%;
 }
 
 ul,
@@ -45,6 +52,8 @@ mat-tab-group {
   -moz-box-shadow: 0px 0px 8px 5px rgba(0, 0, 0, 0.6);
   box-shadow: 0px 0px 8px 5px rgba(0, 0, 0, 0.6);
   border-radius: 5px !important;
+  margin-top: 4em;
+  min-width: 450px !important;
 }
 
 mat-label {
@@ -89,8 +98,30 @@ mat-pass-toggle-visibility > .mat-icon-button {
 }
 
 #sidebar {
-  position: fixed;
+  display: block;
   background-color: #232323;
-  width: 240px !important;
-  height: 100%;
+  width: 240px;
+  height: 100% !important;
+}
+
+#auth-providers {
+  background-color: #fff;
+}
+
+.merge-left {
+  width: 0px !important;
+}
+
+.build-icon {
+  font-size: 18px !important;
+}
+
+.mat-tab-labels {
+  background-color: #fff !important;
+  border-top-left-radius: 5px !important;
+  border-top-right-radius: 5px !important;
+}
+
+.mat-tab-header-pagination {
+  background-color: #fff !important;
 }

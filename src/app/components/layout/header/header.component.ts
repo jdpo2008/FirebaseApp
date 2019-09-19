@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../../services/auth.service";
-import { User } from "firebase/app";
-import * as authActions from "../../../store/auth/actions/auth.actions";
 import { IAppState } from "../../../store/app.reducer";
 import { Store } from "@ngrx/store";
+import * as authActions from "../../../store/auth/actions/auth.actions";
+import { User, IUser } from "../../../interfaces/auth.interface";
 
 @Component({
   selector: "app-header",
@@ -11,21 +11,23 @@ import { Store } from "@ngrx/store";
   styleUrls: ["./header.component.css"]
 })
 export class HeaderComponent implements OnInit {
-  usuario: User | null;
+  usuario: User;
+  opened: boolean;
   constructor(
     private store: Store<IAppState>,
     private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.usuario = this.authService.usuario;
+    this.store.select("auth").subscribe(data => (this.usuario = data.user));
   }
 
   public toggleBars() {
-    alert("Mensaje desde el header");
+    // this.opened = true;
+    // jQuery("#sidebar").toggleClass("merge-left");
   }
 
   public logOut() {
-    this.store.dispatch(new authActions.Logout());
+    this.store.dispatch(new authActions.LogoutRequested(this.usuario.uid));
   }
 }

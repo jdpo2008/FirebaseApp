@@ -10,12 +10,21 @@
     </button>
     <mat-menu #belowMenu="matMenu" yPosition="below">
       <mat-list>
-        <mat-list-item> <a [routerLink]="['/Log']">Ajustes</a></mat-list-item>
-        <mat-list-item> <a [routerLink]="['/Log']">Perfil</a></mat-list-item>
+        <mat-list-item>
+          <a [routerLink]="['/Log']">
+            <mat-icon class="build-icon">build</mat-icon>Ajustes</a
+          ></mat-list-item
+        >
+        <mat-list-item>
+          <a [routerLink]="['/Log']"
+            ><mat-icon class="build-icon">people</mat-icon>Perfil</a
+          ></mat-list-item
+        >
         <mat-divider></mat-divider>
         <mat-list-item>
-          <a [routerLink]="" role="button" (click)="logOut()"
-            >Cerrar Sesión</a
+          <a [routerLink]="" role="button" (click)="logOut()">
+            <mat-icon class="build-icon">power_settings_new</mat-icon>Cerrar
+            Sesión</a
           ></mat-list-item
         >
       </mat-list>

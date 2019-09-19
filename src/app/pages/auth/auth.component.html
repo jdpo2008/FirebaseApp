@@ -1,10 +1,11 @@
-<ng-container>
+<section
+  style="background-image: url('../../../assets/images/pubg-wallpapers.jpg'); background-size: cover; background-position: top center;"
+>
   <div
     id="bg-shadow"
     fxLayout="column"
     fxLayoutAlign="center center"
     fxLayoutGap="gappx"
-    style="margin-top: 3em"
   >
     <mat-tab-group
       [selectedIndex]="tabIndex"
@@ -39,6 +40,7 @@
                     type="text"
                     required
                   />
+                  <mat-icon color="primary" matPrefix>email</mat-icon>
                   <mat-error
                     *ngIf="submited && loginFormGroup.controls['email'].invalid"
                     >{{ getLoginEmailErrorMessage() }}</mat-error
@@ -62,6 +64,7 @@
                     type="password"
                     required
                   />
+                  <mat-icon color="primary" matPrefix>lock</mat-icon>
                   <mat-pass-toggle-visibility
                     #togglepassword
                     matSuffix
@@ -78,11 +81,12 @@
                 <button
                   [@animate]="{ value: '*', params: { x: '50px' } }"
                   mat-raised-button
-                  style="margin-top: 10px; width: 50%;"
+                  style="margin-top: 10px; width: 35%;"
                   color="primary"
                   type="submit"
                   [disabled]="isLoading"
                 >
+                  <mat-icon *ngIf="!isLoading">move_to_inbox</mat-icon>
                   <mat-icon *ngIf="isLoading">
                     <mat-spinner
                       diameter="40"
@@ -92,7 +96,7 @@
                     >
                     </mat-spinner
                   ></mat-icon>
-                  <span *ngIf="!isLoading">Login</span>
+                  <span *ngIf="!isLoading"> Login</span>
                 </button>
               </div>
             </form>
@@ -117,10 +121,33 @@
                 Olvidaste la Contraseña?
               </button>
             </div>
+            <div
+              fxLayout="column"
+              fxLayoutAlign="center center"
+              style="margin-top: 1em"
+            >
+              <mat-label color="primary">Iniciar con </mat-label>
+              <div
+                fxLayout="row"
+                fxLayoutAlign="space-around center"
+                fxLayoutGap="gappx"
+                style="margin-top: 1em; min-width: 350px;"
+              >
+                <button mat-icon-button (click)="onSocialLogin('google')">
+                  <mat-icon svgIcon="google"></mat-icon> Google
+                </button>
+                <button mat-icon-button (click)="onSocialLogin('facebook')">
+                  <mat-icon svgIcon="facebook"></mat-icon> Facebook
+                </button>
+                <button mat-icon-button (click)="onSocialLogin('twitter')">
+                  <mat-icon svgIcon="twitter"></mat-icon> Twitter
+                </button>
+              </div>
+            </div>
           </mat-card-content>
           <!-- <mat-card-footer *ngIf="isLoading">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-          </mat-card-footer> -->
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </mat-card-footer> -->
         </mat-card>
       </mat-tab>
       <mat-tab label="Crear Cuenta">
@@ -135,9 +162,9 @@
               (ngSubmit)="onRegister()"
               novalidate
             >
-              <div fxLayout="column" fxLayoutAlign="center center">
+              <div fxLayout="column" fxLayoutAlign="flex-start center">
                 <div class="row">
-                  <div class="col">
+                  <div class="col-md-6">
                     <mat-form-field
                       appearance="outline"
                       class="full-width"
@@ -153,6 +180,7 @@
                         placeholder="Nombres"
                         type="text"
                       />
+                      <mat-icon color="primary" matPrefix>person</mat-icon>
                       <mat-error
                         *ngIf="
                           submited &&
@@ -162,7 +190,7 @@
                       >
                     </mat-form-field>
                   </div>
-                  <div class="col">
+                  <div class="col-md-6">
                     <mat-form-field
                       appearance="outline"
                       class="full-width"
@@ -178,6 +206,7 @@
                         placeholder="Apellidos"
                         type="text"
                       />
+                      <mat-icon color="primary" matPrefix>people</mat-icon>
                       <mat-error
                         *ngIf="
                           submited &&
@@ -203,6 +232,7 @@
                     placeholder="Email"
                     type="text"
                   />
+                  <mat-icon color="primary" matPrefix>email</mat-icon>
                   <mat-error
                     *ngIf="
                       submited && registerFormGroup.controls['email'].invalid
@@ -226,6 +256,7 @@
                     placeholder="Password"
                     [type]="toggle.type"
                   />
+                  <mat-icon color="primary" matPrefix>lock</mat-icon>
                   <mat-pass-toggle-visibility
                     #toggle
                     matSuffix
@@ -268,6 +299,7 @@
                     type="password"
                     #confirmPass
                   />
+                  <mat-icon matPrefix color="primary">vpn_key</mat-icon>
                   <mat-hint align="end" aria-live="polite">
                     {{ confirmPass.value.length }} /
                     {{ passwordComponent.max }}
@@ -284,10 +316,13 @@
                 <button
                   [@animate]="{ value: '*', params: { y: '50px' } }"
                   mat-raised-button
-                  style="margin-top: 20px; width: 50%;"
+                  style="margin-top: 20px; width: 40%;"
                   color="primary"
                   type="submit"
+                  [disabled]="isLoading"
                 >
+                  <mat-icon *ngIf="!isLoading">person_add</mat-icon>
+
                   <mat-icon *ngIf="isLoading">
                     <mat-spinner
                       diameter="40"
@@ -297,14 +332,14 @@
                     >
                     </mat-spinner
                   ></mat-icon>
-                  <span *ngIf="!isLoading">Registrarse</span>
+                  <span *ngIf="!isLoading"> Registrarse</span>
                 </button>
               </div>
             </form>
           </mat-card-content>
           <!-- <mat-card-footer *ngIf="isLoading">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-          </mat-card-footer> -->
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </mat-card-footer> -->
         </mat-card>
       </mat-tab>
       <mat-tab label="Recuperar Contraseña" *ngIf="passwordResetWished">
@@ -376,24 +411,5 @@
         </mat-card>
       </mat-tab>
     </mat-tab-group>
-    <mat-label color="primary" *ngIf="tabIndex != 2">Iniciar con </mat-label>
-    <div
-      id="auth-providers"
-      fxLayout="row"
-      fxLayoutAlign="space-around center"
-      fxLayoutGap="gappx"
-      style="min-width: 200px"
-      *ngIf="tabIndex != 2"
-    >
-      <button mat-icon-button matTooltip="Google" (click)="onGoogleLogin()">
-        <mat-icon svgIcon="google"></mat-icon>
-      </button>
-      <button mat-icon-button matTooltip="Facebook" (click)="onFacebookLogin()">
-        <mat-icon svgIcon="facebook"></mat-icon>
-      </button>
-      <button mat-icon-button matTooltip="Twitter" (click)="onTwitterLogin()">
-        <mat-icon svgIcon="twitter"></mat-icon>
-      </button>
-    </div>
   </div>
-</ng-container>
+</section>

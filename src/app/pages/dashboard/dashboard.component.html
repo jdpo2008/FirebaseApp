@@ -1,2 +1,25 @@
-<app-header></app-header>
-<app-sidebar></app-sidebar>
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+    <mat-nav-list>
+      <mat-list-item
+        ><a href=""
+          ><mat-icon matListIcon>dvr</mat-icon>Dashboard</a
+        ></mat-list-item
+      >
+      <mat-list-item
+        ><a href=""
+          ><mat-icon matListIcon>lock</mat-icon>Seguridad</a
+        ></mat-list-item
+      >
+      <mat-list-item>item 2</mat-list-item>
+      <mat-list-item>item 3</mat-list-item>
+      <mat-list-item>item 4</mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <app-header></app-header>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- <app-sidebar></app-sidebar> -->

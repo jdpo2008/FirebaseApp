@@ -8,6 +8,7 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { environment } from "../../environments/environment";
 
 import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
@@ -29,6 +30,7 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFireDatabaseModule,
     SweetAlert2Module.forRoot(),
     ComponentsModule
   ],
@@ -37,10 +39,12 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFireDatabaseModule,
     SweetAlert2Module,
     AuthComponent,
     NotfoundComponent,
     DashboardComponent
-  ]
+  ],
+  providers: []
 })
 export class PagesModule {}

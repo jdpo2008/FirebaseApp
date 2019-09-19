@@ -4,12 +4,12 @@ export function getErrorAuthMessage(error: FirebaseError): string {
   let messages;
   switch (error.code) {
     case "auth/wrong-password": {
-      messages = "Credenciales Incorrectas Verifique";
+      messages = "Email y/o Password Incorrectos Verifique";
       break;
     }
 
     case "auth/user-not-found": {
-      messages = "Credenciales Incorrectas Verifique";
+      messages = "Email y/o Password Incorrectos Verifique";
       break;
     }
 

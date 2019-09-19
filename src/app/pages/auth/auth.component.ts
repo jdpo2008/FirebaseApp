@@ -4,14 +4,14 @@ import { Store, select } from "@ngrx/store";
 import { IAppState } from "../../store/app.reducer";
 import * as authActions from "../../store/auth/actions/auth.actions";
 import { ICredentials } from "src/app/interfaces/auth.interface";
-import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import { NgxSpinnerService } from "ngx-spinner";
 import { Usuario, AuthService } from "../../services/auth.service";
-import { IAuthState } from "src/app/store/auth/state/auth.state";
 import { MatTabChangeEvent } from "@angular/material";
 import { AuthAnimations } from "../../animations/index";
-import { SingUp } from "../../store/auth/actions/auth.actions";
+import { AuthProviders } from "../../interfaces/auth.interface";
+import { getUser, getError } from "../../store/auth/selectors/auth.selectors";
+import * as CryptoJS from "crypto-js";
 import {
   NameValidation,
   LastNameValidation,
@@ -19,6 +19,9 @@ import {
   PasswordValidation,
   RepeatPasswordValidator
 } from "../../helpers/validators";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { getErrorAuthMessage } from "../../helpers/auth.errors";
 
 export const PHONE_NUMBER_REGEX = new RegExp(/^\+(?:[0-9] ?){6,14}[0-9]$/);
 
@@ -37,10 +40,11 @@ export class AuthComponent implements OnInit, OnDestroy {
   public isLoading: boolean;
   public passwordResetWished = false;
   public tabIndex: number;
-  user$: Observable<IAuthState>;
   public selectedTabChange: EventEmitter<
     MatTabChangeEvent
   > = new EventEmitter();
+  public providers: AuthProviders;
+  error$: Observable<string | null>;
   constructor(
     private fb: FormBuilder,
     private store: Store<IAppState>,
@@ -54,68 +58,63 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.store.select("auth").subscribe(data => console.log(data.user));
-    this.store.dispatch(new authActions.GetUser());
-    console.log(this.authService.authenticated);
+    this.store
+      .select("auth")
+      .subscribe(data => (this.isLoading = data.isLoading));
+    // this.store.dispatch(new authActions.GetUser());
+    this.error$ = this.store.pipe(
+      select(getError),
+      map((error: any) => {
+        if (error) {
+          console.log(error);
+          return getErrorAuthMessage(error.code);
+        } else {
+          return null;
+        }
+      })
+    );
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.store
+      .select("auth")
+      .subscribe()
+      .unsubscribe();
+  }
 
-  public onLogin() {
+  onLogin() {
     const credenials: ICredentials = {
       email: this.loginFormGroup.controls.email.value,
       password: this.loginFormGroup.controls.password.value
     };
     this.submited = true;
-    // this.store
-    //   .select("auth")
-    //   .subscribe(auth => (this.isLoading = auth.loading));
-    // this.store
-    //   .pipe(select(selectIsLoading))
-    //   .subscribe(val => (this.isLoading = val));
     if (this.loginFormGroup.invalid) {
       return;
     }
-    this.spinner.show();
-    this.store.dispatch(new authActions.EmailLogin(credenials));
+    this.store.dispatch(new authActions.LoginRequested(credenials));
   }
 
-  onGoogleLogin() {
-    this.store.dispatch(new authActions.GoogleLogin());
+  onSocialLogin(authProviders: AuthProviders) {
+    console.log(authProviders);
   }
 
-  onFacebookLogin() {
-    this.store.dispatch(new authActions.FacebookLogin());
-  }
-
-  onTwitterLogin() {
-    this.store.dispatch(new authActions.TwitterkLogin());
-  }
-
-  public onRegister() {
+  onRegister() {
     this.submited = true;
-    this.spinner.show();
     if (this.registerFormGroup.invalid) {
-      this.spinner.hide();
-      console.log(this.registerFormGroup);
       return;
     }
     const user = new Usuario(
       this.registerFormGroup.controls.nombre.value,
       this.registerFormGroup.controls.apellido.value,
       this.registerFormGroup.controls.email.value,
+      false,
       null,
       null,
       null,
       null,
-      this.registerFormGroup.controls.password.value
+      CryptoJS.AES.encrypt(this.registerFormGroup.controls.password.value)
     );
-
-    this.store.dispatch(new authActions.SingUp(user));
-    // this.authService.singUp(
-    //   user,
-    //   this.registerFormGroup.controls.password.value
-    // );
+    this.store.dispatch(new authActions.RegisterRequested(user));
   }
 
   private onStrengthChanged(strength: number) {

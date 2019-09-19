@@ -21,6 +21,10 @@ export interface IUser {
   displayName: string;
   loading?: boolean;
   error?: string;
+  photoUrl?: string;
+  isNewUser?: boolean;
+  isAdmin?: boolean;
+  isOnline?: boolean;
   crdentials?: ICredentials;
 }
 

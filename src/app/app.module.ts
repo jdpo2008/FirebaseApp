@@ -11,7 +11,7 @@ import { ReduxModule } from "./store/redux.module";
 import { PagesModule } from "./pages/pages.module";
 
 import { AppComponent } from "./app.component";
-import { ComponentsModule } from './components/components.module';
+import { ComponentsModule } from "./components/components.module";
 
 @NgModule({
   declarations: [AppComponent],
