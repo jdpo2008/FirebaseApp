@@ -1,0 +1,20 @@
+.nav-item:not(:nth-child(1)) {
+  margin-left: 3px;
+}
+
+.nav-item:hover,
+.nav-item.active a {
+  background-color: black;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-link {
+  font-size: 15px !important;
+  color: #fff;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: rgba(255, 255, 255, 0.7);
+}

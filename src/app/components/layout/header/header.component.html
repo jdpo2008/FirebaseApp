@@ -3,7 +3,20 @@
     <button mat-icon-button (click)="toggleBars()">
       <mat-icon>menu</mat-icon>
     </button>
-    <h1 class="example-app-name">Responsive App</h1>
+    <ul class="nav">
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/index']">Dashboard</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/about']">Quienes Somos?</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/services']">Servicios</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/contact']">Contactos</a>
+      </li>
+    </ul>
     <span class="example-spacer"></span>
     <button mat-button [matMenuTriggerFor]="belowMenu">
       <mat-icon>person_pin</mat-icon> {{ usuario.displayName }}

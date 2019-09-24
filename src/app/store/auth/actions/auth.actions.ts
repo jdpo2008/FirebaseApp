@@ -1,6 +1,11 @@
 import { Action } from "@ngrx/store";
-import { ICredentials, User } from "../../../interfaces/auth.interface";
+import {
+  ICredentials,
+  User,
+  AuthProviders
+} from "../../../interfaces/auth.interface";
 import { Usuario } from "../../../services/auth.service";
+import { FirebaseError } from "firebase";
 
 export enum EAuthAction {
   REGISTER_REQUESTED = "[Auth] REGISTER Requested",
@@ -121,7 +126,7 @@ export class GetUser implements Action {
 export class AuthError implements Action {
   readonly type = EAuthAction.AUTH_ERROR;
 
-  constructor(public payload: { error: any }) {}
+  constructor(public payload: { error: FirebaseError }) {}
 }
 
 export type AuthActionTypes =

@@ -102,6 +102,10 @@ export class AuthEffects {
           uid: payload.user.uid,
           status: true
         }),
+        new fromAuthActions.UpdateProfile({
+          displayName: payload.user.displayName,
+          photoUrl: payload.user.photoUrl
+        }),
         new fromAuthActions.CheckUserRole({ uid: payload.user.uid })
       ];
     })
@@ -130,6 +134,46 @@ export class AuthEffects {
           }),
           catchError(error => of(new fromAuthActions.AuthError(error)))
         )
+    )
+  );
+
+  @Effect()
+  socialLogin$ = this.actions$.pipe(
+    ofType(fromAuthActions.EAuthAction.SOCIAL_LOGIN),
+    map((action: fromAuthActions.SocialLogin) => action.payload),
+    switchMap(payload =>
+      this.authService.socialLogin(payload.authProvider).pipe(
+        map((res: any) => {
+          const user = {
+            uid: res.user.uid,
+            displayName: res.user.displayName,
+            displayLastname: null,
+            email: res.user.email,
+            providerId: res.additionalUserInfo.providerId,
+            photoUrl: res.user.photoURL,
+            isNewUser: res.additionalUserInfo.isNewUser
+          };
+          return user;
+        }),
+        switchMap((user: any) => {
+          if (user.isNewUser) {
+            return [
+              new fromAuthActions.LoginSuccess({ user }),
+              new fromAuthActions.SaveUser({ user }),
+              new fromAuthActions.CheckUserRole({ uid: user.uid })
+            ];
+          } else {
+            return [
+              new fromAuthActions.LoginSuccess({ user }),
+              new fromAuthActions.CheckUserRole({ uid: user.uid })
+            ];
+          }
+        }),
+        tap(() => this.router.navigateByUrl("")),
+        catchError(error => {
+          return of(new fromAuthActions.AuthError({ error }));
+        })
+      )
     )
   );
 

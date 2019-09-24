@@ -5,12 +5,11 @@ import { IAppState } from "../../store/app.reducer";
 import * as authActions from "../../store/auth/actions/auth.actions";
 import { ICredentials } from "src/app/interfaces/auth.interface";
 import "rxjs/add/operator/map";
-import { NgxSpinnerService } from "ngx-spinner";
-import { Usuario, AuthService } from "../../services/auth.service";
+import { Usuario } from "../../services/auth.service";
 import { MatTabChangeEvent } from "@angular/material";
 import { AuthAnimations } from "../../animations/index";
 import { AuthProviders } from "../../interfaces/auth.interface";
-import { getUser, getError } from "../../store/auth/selectors/auth.selectors";
+import { getError } from "../../store/auth/selectors/auth.selectors";
 import * as CryptoJS from "crypto-js";
 import {
   NameValidation,
@@ -45,12 +44,8 @@ export class AuthComponent implements OnInit, OnDestroy {
   > = new EventEmitter();
   public providers: AuthProviders;
   error$: Observable<string | null>;
-  constructor(
-    private fb: FormBuilder,
-    private store: Store<IAppState>,
-    private spinner: NgxSpinnerService,
-    private authService: AuthService
-  ) {
+  ErrorCode: string;
+  constructor(private fb: FormBuilder, private store: Store<IAppState>) {
     this.submited = false;
     this.loginFormInit();
     this.registerFormInit();
@@ -61,13 +56,14 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.store
       .select("auth")
       .subscribe(data => (this.isLoading = data.isLoading));
+
     // this.store.dispatch(new authActions.GetUser());
     this.error$ = this.store.pipe(
       select(getError),
       map((error: any) => {
         if (error) {
           console.log(error);
-          return getErrorAuthMessage(error.code);
+          return error.code;
         } else {
           return null;
         }
@@ -94,8 +90,16 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.store.dispatch(new authActions.LoginRequested(credenials));
   }
 
-  onSocialLogin(authProviders: AuthProviders) {
-    console.log(authProviders);
+  onGoogleLogin(authProvider: string) {
+    this.store.dispatch(new authActions.SocialLogin({ authProvider }));
+  }
+
+  onFacebookLogin(authProvider: string) {
+    this.store.dispatch(new authActions.SocialLogin({ authProvider }));
+  }
+
+  onTwitterLogin(authProvider: string) {
+    this.store.dispatch(new authActions.SocialLogin({ authProvider }));
   }
 
   onRegister() {

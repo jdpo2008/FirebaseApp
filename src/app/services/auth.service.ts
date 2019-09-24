@@ -46,6 +46,22 @@ export class AuthService {
     return from(this.afAuth.auth.signInWithEmailAndPassword(email, password));
   }
 
+  socialLogin(authProvider: string) {
+    let provider: any;
+    if (authProvider === "google") {
+      provider = new firebase.auth.GoogleAuthProvider();
+    }
+
+    if (authProvider === "facebook") {
+      provider = new firebase.auth.FacebookAuthProvider();
+    }
+
+    if (authProvider === "twitter") {
+      provider = new firebase.auth.TwitterAuthProvider();
+    }
+    return from(this.afAuth.auth.signInWithPopup(provider));
+  }
+
   logout(uid: string) {
     this.updateOnlineStatus(uid, false);
     return from(this.afAuth.auth.signOut());
@@ -95,12 +111,12 @@ export class AuthService {
   }
 
   updateOnlineStatus(uid: string, status: boolean) {
-    // if (!status) {
-    //   this.afa.doc(`${collections.users}/${uid}`).update({ isOnline: false });
-    // }
-    // return from(
-    //   this.afa.doc(`${collections.users}/${uid}`).update({ isOnline: status })
-    // );
+    if (!status) {
+      this.afa.doc(`${collections.users}/${uid}`).update({ isOnline: false });
+    }
+    return from(
+      this.afa.doc(`${collections.users}/${uid}`).update({ isOnline: status })
+    );
   }
 
   get authenticated(): boolean {
